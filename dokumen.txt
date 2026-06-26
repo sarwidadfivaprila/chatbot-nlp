@@ -1,0 +1,22 @@
+COBIT 2019 adalah framework tata kelola teknologi informasi yang digunakan oleh organisasi di seluruh dunia.
+Framework COBIT digunakan untuk meningkatkan governance dan manajemen TI organisasi secara efektif.
+COBIT membantu organisasi mencapai tujuan bisnis melalui pengelolaan TI yang baik dan terstruktur.
+
+DMBOK adalah framework standar untuk tata kelola dan manajemen data perusahaan.
+DMBOK digunakan sebagai panduan dalam pengelolaan aset data organisasi secara menyeluruh.
+
+Machine learning adalah cabang kecerdasan buatan yang memungkinkan sistem belajar dari data secara otomatis.
+Contoh penerapan machine learning adalah klasifikasi email, rekomendasi produk, dan deteksi penipuan.
+
+NLP adalah bidang AI yang berkaitan dengan pemahaman bahasa manusia oleh komputer.
+Teknik NLP meliputi tokenisasi, stemming, lemmatisasi, dan analisis sintaksis kalimat.
+
+Audit TI adalah proses pemeriksaan sistematis terhadap infrastruktur, kebijakan, dan operasi teknologi informasi.
+Hasil audit TI dapat digunakan sebagai dasar perbaikan tata kelola TI perusahaan ke depannya.
+
+Chatbot adalah program komputer yang dirancang untuk mensimulasikan percakapan dengan pengguna manusia.
+Chatbot digunakan luas dalam layanan pelanggan, pendidikan, kesehatan, dan berbagai bidang lainnya.
+
+Tambahkan isi dokumen Anda di sini sesuai kebutuhan.
+Setiap baris atau paragraf akan menjadi sumber jawaban chatbot.
+Semakin banyak isi dokumen, semakin pintar chatbot dalam menjawab.
