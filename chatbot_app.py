@@ -147,8 +147,8 @@ Contoh DBMS populer adalah MySQL, PostgreSQL, MongoDB, dan SQLite.
 # =============================================
 @st.cache_resource
 def build_knowledge_base(text):
-    sentences = sent_tokenize(text)
-    sentences = [s.strip() for s in sentences if len(s.strip()) > 15]
+    # Ganti sent_tokenize dengan split per baris
+    sentences = [s.strip() for s in text.split("\n") if len(s.strip()) > 5]
     clean = [preprocessing(s) for s in sentences]
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
     X = vectorizer.fit_transform(clean)
@@ -161,13 +161,30 @@ def chatbot_response(user_input, sentences, vectorizer, X, threshold=0.10):
     clean_input = preprocessing(user_input)
     if not clean_input.strip():
         return "Pertanyaan terlalu singkat atau tidak dikenali. Coba tanyakan lebih spesifik."
+
     user_vec = vectorizer.transform([clean_input])
-    sim = cosine_similarity(user_vec, X)
-    idx = int(sim.argmax())
-    score = float(sim[0][idx])
-    if score < threshold:
+    sim = cosine_similarity(user_vec, X)[0]
+
+    # Ambil semua kalimat yang melewati threshold, urutkan dari skor tertinggi
+    ranked = sorted(
+        [(score, idx) for idx, score in enumerate(sim) if score >= threshold],
+        reverse=True
+    )
+
+    if not ranked:
         return "Maaf, saya tidak menemukan informasi yang relevan. Coba gunakan kata kunci yang lebih spesifik."
-    return sentences[idx]
+
+    # Gabungkan semua kalimat relevan, hilangkan duplikat, jaga urutan
+    seen = set()
+    result = []
+    for score, idx in ranked:
+        sentence = sentences[idx].strip()
+        if sentence not in seen:
+            seen.add(sentence)
+            result.append(sentence)
+
+    # Gabung dengan newline agar lebih mudah dibaca
+    return "\n\n".join(result)
 
 # =============================================
 # UI UTAMA
@@ -184,6 +201,7 @@ with st.sidebar:
     uploaded_file = st.file_uploader(
         "Upload file .txt sebagai sumber pengetahuan",
         type=["txt"],
+        accept_multiple_files=True,  # ← tambah ini
         help="Chatbot akan menjawab berdasarkan isi dokumen ini"
     )
 
@@ -209,14 +227,17 @@ with st.sidebar:
         st.rerun()
 
 # --- LOAD KNOWLEDGE BASE ---
-if uploaded_file is not None:
-    doc_text = uploaded_file.read().decode("utf-8")
-    st.sidebar.success(f"✅ Dokumen dimuat ({len(doc_text.split())} kata)")
+combined_text = DEFAULT_KNOWLEDGE
+if uploaded_file:
+    for f in uploaded_file:
+        doc_text = f.read().decode("utf-8")
+        combined_text += "\n" + doc_text
+    total_words = sum(len(f.name) for f in uploaded_file)
+    st.sidebar.success(f"✅ {len(uploaded_file)} dokumen dimuat")
 else:
-    doc_text = DEFAULT_KNOWLEDGE
     st.sidebar.caption("📌 Menggunakan knowledge base default")
 
-sentences, vectorizer, X = build_knowledge_base(doc_text)
+sentences, vectorizer, X = build_knowledge_base(combined_text)
 
 # --- SESSION STATE ---
 if "messages" not in st.session_state:
